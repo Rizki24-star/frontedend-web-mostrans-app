@@ -19,13 +19,19 @@ const QueryResult: React.FC<PropsWithChildren<QueryResultProps>> = ({
   }
   if (loading) {
     return (
-      <Spinner
-        animation="border"
-        role="status"
-        className="m-auto h-full w-full"
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          height: "100vh",
+        }}
       >
-        <span className="visually-hidden">Loading...</span>
-      </Spinner>
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+      </div>
     );
   }
   if (data) {

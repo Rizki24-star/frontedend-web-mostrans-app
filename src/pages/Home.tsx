@@ -4,11 +4,10 @@ import { useQuery } from "@apollo/client";
 import { useRecoilState } from "recoil";
 import { characterListState } from "../recoil/atom";
 import QueryResult from "../components/QueryResult";
-import Card from "../components/CharacterCard";
 import CharacterCard from "../components/CharacterCard";
 import { Col, Container, Row } from "react-bootstrap";
 
-const CHARACTERS = gql(`
+const GET_CHARACTERS = gql(`
 query GetCharacters {
 characters{
   results{
@@ -27,7 +26,7 @@ characters{
 
 const HomePage = () => {
   const [characters, setCharacters] = useRecoilState(characterListState);
-  const { loading, error, data } = useQuery(CHARACTERS);
+  const { loading, error, data } = useQuery(GET_CHARACTERS);
 
   useEffect(() => {
     if (data) {
@@ -43,17 +42,17 @@ const HomePage = () => {
           error={error}
           data={data?.characters?.results}
         >
-          <Row className="gap-2 justify-content-center ">
+          <Row className="gap-3 justify-content-center ">
             {data?.characters?.results?.map((character) => (
               <Col lg={5} md={10}>
                 <CharacterCard
                   key={character?.id}
+                  id={character?.id!}
                   name={character?.name!}
                   gender={character?.gender!}
                   image={character?.image!}
                   species={character?.species!}
                   status={character?.status!}
-                  type={character?.type!}
                 />
               </Col>
             ))}
