@@ -15,3 +15,11 @@ export const characterState = atom<GetCharacterQuery>({
   key: "characterListState",
   default: {},
 });
+
+export const characterLocationState = atom<{
+  name: string;
+  character_id: string;
+}>({
+  key: "characterLocationsState",
+  default: { name: "", character_id: "" },
+});
