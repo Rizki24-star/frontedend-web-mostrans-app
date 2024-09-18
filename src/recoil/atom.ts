@@ -12,7 +12,7 @@ export const characterListState = atom<GetCharactersQuery>({
 });
 
 export const characterState = atom<GetCharacterQuery>({
-  key: "characterListState",
+  key: "characterState",
   default: {},
 });
 

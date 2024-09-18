@@ -6,22 +6,21 @@ import { characterLocationState, characterState } from "../recoil/atom";
 import { FormEvent, useEffect } from "react";
 import QueryResult from "../components/QueryResult";
 import { db } from "../config/firebase";
-import { doc, serverTimestamp, setDoc, Timestamp } from "firebase/firestore";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 
 const GET_CHARACTER = gql(`
-query GetCharacter($characterId: ID!) {
-  character(id: $characterId) {
-    id
-    name
-    status
-    species
-    type
-    gender
-    image
+  query GetCharacter($characterId: ID!) {
+    character(id: $characterId) {
+      id
+      name
+      status
+      species
+      type
+      gender
+      image
+    }
   }
-}
-
-  `);
+`);
 
 const CharacterDetailPage = () => {
   const { id } = useParams();
@@ -50,17 +49,18 @@ const CharacterDetailPage = () => {
   const handleAdd = async (e: FormEvent) => {
     try {
       e.preventDefault();
-
       await setDoc(
-        doc(db, "character_location", `${characterLocationState}-${id}`),
+        doc(db, "character_location", `${characterLocation.name}-${id}`),
         {
-          name: "Los Angeles",
+          name: characterLocation.name,
           character_id: id,
           timestamp: serverTimestamp(),
         }
       );
+      setCharacterLocation({ ...characterLocation, name: "" });
+      console.log("Location added successfully");
     } catch (error) {
-      console.log(error);
+      console.error("Error adding location: ", error);
     }
   };
 
@@ -74,41 +74,50 @@ const CharacterDetailPage = () => {
             </Col>
             <Col
               md={5}
-              className="h-full  flex flex-column justify-content-between gap-4 p-2"
+              className="h-full d-flex flex-column justify-content-between gap-4 p-2"
             >
               <div>
-                <h4 className="font-bold fs-2">
-                  {" "}
-                  {character?.character?.name!}
-                </h4>
+                <h4 className="font-bold fs-2">{character?.character?.name}</h4>
                 <div className="d-flex align-items-center gap-2 fw-bold">
                   <div
-                    className={`rounded-circle ${character.character?.status === "Alive" ? "bg-success" : character.character?.status === "Dead" ? "bg-danger text-decoration-line-through" : "bg-secondary"}`}
+                    className={`rounded-circle ${
+                      character?.character?.status === "Alive"
+                        ? "bg-success"
+                        : character?.character?.status === "Dead"
+                          ? "bg-danger text-decoration-line-through"
+                          : "bg-secondary"
+                    }`}
                     style={{ width: "12px", height: "12px" }}
                   />
-                  {character.character?.status} - {character.character?.species}
+                  {character?.character?.status} -{" "}
+                  {character?.character?.species}
                 </div>
               </div>
+
               <div className="mt-2">
-                <span className="text-secondary fs-6">status</span>
-                <h5> {character?.character?.status!}</h5>
+                <span className="text-secondary fs-6">Status</span>
+                <h5>{character?.character?.status}</h5>
               </div>
+
               <div className="mt-2">
-                <span className="text-secondary fs-6">status</span>
-                <h5> {character?.character?.gender!}</h5>
+                <span className="text-secondary fs-6">Gender</span>
+                <h5>{character?.character?.gender}</h5>
               </div>
 
               <div>
                 <Form onSubmit={handleAdd}>
-                  <Form.Group
-                    className="mb-3"
-                    controlId="exampleForm.ControlInput1"
-                  >
+                  <Form.Group className="mb-3" controlId="locationInput">
                     <Form.Label>Location</Form.Label>
-                    <Form.Control type="text" placeholder="Location" />
+                    <Form.Control
+                      name="name"
+                      type="text"
+                      placeholder="Enter location"
+                      onChange={handleChange}
+                      value={characterLocation.name}
+                    />
                   </Form.Group>
                   <div className="d-flex justify-content-end">
-                    <Button type="submit">Create Location</Button>
+                    <Button type="submit">Add Location</Button>
                   </div>
                 </Form>
               </div>

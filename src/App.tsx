@@ -4,6 +4,7 @@ import HomePage from "./pages/Home";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import CharacterDetailPage from "./pages/CharacterDetail";
 import LayoutPage from "./pages/Layout";
+import CharacterLocationsPage from "./pages/CharacterLocations";
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
       {
         path: "/:id",
         element: <CharacterDetailPage />,
+      },
+      {
+        path: "/locations",
+        element: <CharacterLocationsPage />,
       },
     ],
   },
